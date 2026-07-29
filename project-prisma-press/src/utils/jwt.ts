@@ -1,5 +1,4 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
-import { IJwtPayload } from "../modules/user/user.interface";
 
 const createToken = (
   payload: JwtPayload,
@@ -10,13 +9,19 @@ const createToken = (
 
   return token;
 };
-const verifyToken = (token: string, secret: string): IJwtPayload => {
+const verifyToken = (token: string, secret: string) => {
   try {
     const decoded = jwt.verify(token, secret);
-    return decoded as IJwtPayload;
+    return {
+      success: true,
+      data: decoded,
+    };
   } catch (error: any) {
     console.log("Token verification failed: ", error);
-    throw new Error(error.message);
+    return {
+      success: false,
+      error: error.message,
+    };
   }
 };
 
