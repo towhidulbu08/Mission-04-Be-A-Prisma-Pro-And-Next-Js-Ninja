@@ -1,67 +1,49 @@
 import { NextFunction, Request, Response } from "express";
+import catchAsync from "../../utils/catchAsync";
 import { commentService } from "./comment.services";
 
-const getAllComments = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const result = await commentService.getAllPostFromDB();
-};
-const getCommentsWithStats = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const result = await commentService.getCommentsWithStatsFromDB();
-};
-const getMyComments = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const result = await commentService.getMyCommentsFromDB();
-};
-const getSingleComment = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const id = Number(req.params.id);
-  const result = await commentService.getSingleCommentFromDB(id);
-};
+const getCommentByAuthorId = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await commentService.getAllPostFromDB();
+  },
+);
 
-const createComments = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const result = await commentService.createCommentIntoDB(req.body);
-};
+const getCommentByCommentId = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await commentService.getAllPostFromDB();
+  },
+);
 
-const updateComment = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const result = await commentService.updateCommentIntoDB(req.body);
-};
+const createComments = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await commentService.getAllPostFromDB();
+  },
+);
 
-const deleteComment = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const id = Number(req.params.id);
-  const result = await commentService.deleteCommentFromDB(id);
-};
+const updateComment = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await commentService.getAllPostFromDB();
+  },
+);
+
+const moderateComment = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await commentService.getAllPostFromDB();
+  },
+);
+
+const deleteComment = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await commentService.getAllPostFromDB();
+  },
+);
 
 export const commentController = {
-  getAllComments,
-  getMyComments,
-  getCommentsWithStats,
-  getSingleComment,
+  getCommentByAuthorId,
+
+  getCommentByCommentId,
   createComments,
   updateComment,
   deleteComment,
+  moderateComment,
 };
