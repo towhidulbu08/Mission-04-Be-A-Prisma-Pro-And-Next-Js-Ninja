@@ -23,12 +23,30 @@ const getPostsWithStats = catchAsync(
 );
 const getMyPosts = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await postService.getAllPostFromDB();
+    const authorId = req.user?.id as string;
+    const result = await postService.getMyPostsFromDB(authorId);
+    sendResponse(res, {
+      success: true,
+      message: "My Posts Retrived Successfully",
+      data: result,
+      statusCode: httpStatus.OK,
+    });
   },
 );
 const getSinglePost = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await postService.getAllPostFromDB();
+    const postId = req.params.postId as string;
+    if (!postId) {
+      throw new Error("Post Id Required In Params");
+    }
+    const result = await postService.getSinglePostFromDB(postId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Post Retrived Successfully",
+      data: result,
+    });
   },
 );
 
