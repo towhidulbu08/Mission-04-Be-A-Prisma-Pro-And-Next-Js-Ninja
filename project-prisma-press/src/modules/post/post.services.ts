@@ -1,4 +1,4 @@
-import { CommentStatus } from "../../../generated/prisma/browser";
+import { CommentStatus, PostStatus } from "../../../generated/prisma/browser";
 import { prisma } from "../../lib/prisma";
 import { IcreatePostPayload, IUpdatePostPayload } from "./post.interface";
 
@@ -17,7 +17,68 @@ const getAllPostFromDB = async () => {
   return posts;
 };
 
-const getPostsWithStatsFromDB = async () => {};
+const getPostsStatsFromDB = async () => {
+  const transactionResult = await prisma.$transaction(async (tx) => {
+    const totalPosts = await tx.post.count();
+
+    const totalPublishedPosts = await tx.post.count({
+      where: {
+        status: PostStatus.PUBLISHED,
+      },
+    });
+    const totalDraftPosts = await tx.post.count({
+      where: {
+        status: PostStatus.DRAFT,
+      },
+    });
+    const totalArchivedPosts = await tx.post.count({
+      where: {
+        status: PostStatus.ARCHIVED,
+      },
+    });
+
+    const totalComments = await tx.comment.count();
+
+    const totalApprovedComments = await tx.comment.count({
+      where: {
+        status: CommentStatus.APPROVED,
+      },
+    });
+    const totalRejectedComments = await tx.comment.count({
+      where: {
+        status: CommentStatus.REJECT,
+      },
+    });
+    // Not a Good Approach
+    // const allPosts = await tx.post.findMany();
+
+    // let totalPostViews = 0;
+
+    // allPosts.forEach((post) => {
+    //   totalPostViews += post.views;
+    // });
+
+    const aggregations = await tx.post.aggregate({
+      _sum: {
+        views: true,
+      },
+    });
+
+    const totalPostViews = aggregations._sum.views;
+
+    return {
+      totalPosts,
+      totalPublishedPosts,
+      totalArchivedPosts,
+      totalDraftPosts,
+      totalComments,
+      totalApprovedComments,
+      totalRejectedComments,
+      totalPostViews,
+    };
+  });
+  return transactionResult;
+};
 
 const getMyPostsFromDB = async (authorId: string) => {
   const post = await prisma.post.findMany({
@@ -195,7 +256,7 @@ const deletePostFromDB = async (
 
 export const postService = {
   getAllPostFromDB,
-  getPostsWithStatsFromDB,
+  getPostsStatsFromDB,
   getMyPostsFromDB,
   getSinglePostFromDB,
   createPostIntoDB,

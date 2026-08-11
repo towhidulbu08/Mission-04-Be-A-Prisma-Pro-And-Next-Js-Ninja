@@ -16,9 +16,16 @@ const getAllPosts = catchAsync(
     });
   },
 );
-const getPostsWithStats = catchAsync(
+const getPostsStats = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await postService.getAllPostFromDB();
+    const result = await postService.getPostsStatsFromDB();
+
+    sendResponse(res, {
+      success: true,
+      message: "Post Stats Retrived Successfully",
+      data: result,
+      statusCode: httpStatus.OK,
+    });
   },
 );
 const getMyPosts = catchAsync(
@@ -108,7 +115,7 @@ const deletePost = catchAsync(
 export const postController = {
   getAllPosts,
   getMyPosts,
-  getPostsWithStats,
+  getPostsStats,
   getSinglePost,
   createPosts,
   updatePost,

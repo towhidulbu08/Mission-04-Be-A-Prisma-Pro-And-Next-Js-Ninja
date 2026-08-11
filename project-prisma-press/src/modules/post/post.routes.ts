@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/", postController.getAllPosts); //public
 
-router.get("/stats", auth(Role.ADMIN), postController.getPostsWithStats);
+router.get("/stats", auth(Role.ADMIN), postController.getPostsStats);
 //admin only
 
 router.get(
