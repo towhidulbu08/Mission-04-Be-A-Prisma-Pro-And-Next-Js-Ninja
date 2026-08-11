@@ -19,36 +19,37 @@ const getAllPostFromDB = async () => {
 
 const getPostsStatsFromDB = async () => {
   const transactionResult = await prisma.$transaction(async (tx) => {
-    const totalPosts = await tx.post.count();
+    // const totalPosts = await tx.post.count();
 
-    const totalPublishedPosts = await tx.post.count({
-      where: {
-        status: PostStatus.PUBLISHED,
-      },
-    });
-    const totalDraftPosts = await tx.post.count({
-      where: {
-        status: PostStatus.DRAFT,
-      },
-    });
-    const totalArchivedPosts = await tx.post.count({
-      where: {
-        status: PostStatus.ARCHIVED,
-      },
-    });
+    // const totalPublishedPosts = await tx.post.count({
+    //   where: {
+    //     status: PostStatus.PUBLISHED,
+    //   },
+    // });
+    // const totalDraftPosts = await tx.post.count({
+    //   where: {
+    //     status: PostStatus.DRAFT,
+    //   },
+    // });
 
-    const totalComments = await tx.comment.count();
+    // const totalArchivedPosts = await tx.post.count({
+    //   where: {
+    //     status: PostStatus.ARCHIVED,
+    //   },
+    // });
 
-    const totalApprovedComments = await tx.comment.count({
-      where: {
-        status: CommentStatus.APPROVED,
-      },
-    });
-    const totalRejectedComments = await tx.comment.count({
-      where: {
-        status: CommentStatus.REJECT,
-      },
-    });
+    // const totalComments = await tx.comment.count();
+
+    // const totalApprovedComments = await tx.comment.count({
+    //   where: {
+    //     status: CommentStatus.APPROVED,
+    //   },
+    // });
+    // const totalRejectedComments = await tx.comment.count({
+    //   where: {
+    //     status: CommentStatus.REJECT,
+    //   },
+    // });
     // Not a Good Approach
     // const allPosts = await tx.post.findMany();
 
@@ -65,6 +66,44 @@ const getPostsStatsFromDB = async () => {
     });
 
     const totalPostViews = aggregations._sum.views;
+
+    const [
+      totalPosts,
+      totalPublishedPosts,
+      totalDraftPosts,
+      totalArchivedPosts,
+      totalComments,
+      totalApprovedComments,
+      totalRejectedComments,
+    ] = await Promise.all([
+      tx.post.count(),
+      tx.post.count({
+        where: {
+          status: PostStatus.PUBLISHED,
+        },
+      }),
+      tx.post.count({
+        where: {
+          status: PostStatus.DRAFT,
+        },
+      }),
+      tx.post.count({
+        where: {
+          status: PostStatus.ARCHIVED,
+        },
+      }),
+      tx.comment.count(),
+      tx.comment.count({
+        where: {
+          status: CommentStatus.APPROVED,
+        },
+      }),
+      tx.comment.count({
+        where: {
+          status: CommentStatus.REJECT,
+        },
+      }),
+    ]);
 
     return {
       totalPosts,
