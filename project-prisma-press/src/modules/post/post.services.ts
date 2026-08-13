@@ -4,6 +4,25 @@ import { IcreatePostPayload, IUpdatePostPayload } from "./post.interface";
 
 const getAllPostFromDB = async () => {
   const posts = await prisma.post.findMany({
+    // where: {
+    //   title: "My third Post",
+    //   content: "Ronaldo",
+    // },
+    where: {
+      AND: [
+        {
+          title: "My third Post",
+        },
+        {
+          content: "Ronaldo",
+        },
+        {
+          tags: {
+            has: "prisma",
+          },
+        },
+      ],
+    },
     include: {
       author: {
         omit: {
