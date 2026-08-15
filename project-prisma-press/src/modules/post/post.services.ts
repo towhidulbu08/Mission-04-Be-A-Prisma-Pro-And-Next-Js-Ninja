@@ -59,36 +59,50 @@ const getAllPostFromDB = async () => {
     // },
 
     //? combining search (OR operator) and filtering(AND operator)
-    where: {
-      //filtering & searching combined
-      AND: [
-        //? searching
-        {
-          OR: [
-            {
-              title: {
-                contains: "Ron",
-                mode: "insensitive",
-              },
-            },
-            {
-              content: {
-                contains: "Ron",
-                mode: "insensitive",
-              },
-            },
-          ],
-        },
-        //?filtering
-        {
-          title: "Ronaldo Nazario",
-        },
-        {
-          content: "Ronaldo",
-        },
-      ],
-    },
+    // where: {
+    //   //filtering & searching combined
+    //   AND: [
+    //     //? searching
+    //     {
+    //       OR: [
+    //         {
+    //           title: {
+    //             contains: "Ron",
+    //             mode: "insensitive",
+    //           },
+    //         },
+    //         {
+    //           content: {
+    //             contains: "Ron",
+    //             mode: "insensitive",
+    //           },
+    //         },
+    //       ],
+    //     },
+    //     //?filtering
+    //     {
+    //       title: "Ronaldo Nazario",
+    //     },
+    //     {
+    //       content: "Ronaldo",
+    //     },
+    //   ],
+    // },
+    //take: 1,
+    take: 2,
+    //for first page skip is 0
+    //skip: 1, //visiting page 2
+    //skip: 2, //visiting page 3
+    // page=4, limit/take =1 =>skip:(page-1)*limit
+    // page=3, limit/take=10, skip:(page-1)*limit=(3-1)*10=20
+    skip: 2, //visiting page 4
 
+    //? sorting in ascending or descending order on specific fields
+    orderBy: {
+      createdAt: "desc",
+      title: "desc",
+      content: "desc",
+    },
     include: {
       author: {
         omit: {
