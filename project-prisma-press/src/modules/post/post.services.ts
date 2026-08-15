@@ -4,25 +4,91 @@ import { IcreatePostPayload, IUpdatePostPayload } from "./post.interface";
 
 const getAllPostFromDB = async () => {
   const posts = await prisma.post.findMany({
+    //*filtering/exact match wihout AND operator
     // where: {
     //   title: "My third Post",
     //   content: "Ronaldo",
     // },
+
+    //* //*filtering/exact match with AND operator
+    // where: {
+    //   AND: [
+    //     {
+    //       title: "My third Post",
+    //     },
+    //     {
+    //       content: "Ronaldo",
+    //     },
+    //     {
+    //       tags: {
+    //         has: "prisma",
+    //       },
+    //     },
+    //   ],
+    // },
+
+    //? searching/partial match
+
+    // where: {
+    //   title: {
+    //     contains: "ronaldo",
+    //     mode: "insensitive",
+    //   },
+    //   //? not ideal for partial match
+    //   // content: {
+    //   //   contains: "ronaldo",
+
+    //   // },
+    // },
+    //? searching/partial search with OR operators
+    // where: {
+    //   OR: [
+    //     {
+    //       title: {
+    //         contains: "Ron",
+    //         mode: "insensitive",
+    //       },
+    //     },
+    //     {
+    //       content: {
+    //         contains: "Ro",
+    //         mode: "insensitive",
+    //       },
+    //     },
+    //   ],
+    // },
+
+    //? combining search (OR operator) and filtering(AND operator)
     where: {
+      //filtering & searching combined
       AND: [
+        //? searching
         {
-          title: "My third Post",
+          OR: [
+            {
+              title: {
+                contains: "Ron",
+                mode: "insensitive",
+              },
+            },
+            {
+              content: {
+                contains: "Ron",
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
+        //?filtering
+        {
+          title: "Ronaldo Nazario",
         },
         {
           content: "Ronaldo",
         },
-        {
-          tags: {
-            has: "prisma",
-          },
-        },
       ],
     },
+
     include: {
       author: {
         omit: {
