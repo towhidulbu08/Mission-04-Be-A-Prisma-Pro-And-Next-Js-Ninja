@@ -129,8 +129,6 @@ const deleteCommentFromDB = async (commentId: string, authorId: string) => {
     },
   });
 
-  console.log("commentId and commentData.id", commentId, commentData.id);
-
   // if (!commentData) {
   //     throw new Error("Your provided input is invalid!")
   // }
