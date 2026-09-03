@@ -8,12 +8,12 @@ import httpStatus from "http-status";
 const getAllPosts = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query;
-    console.log("Query", query);
     const result = await postService.getAllPostFromDB(query);
     sendResponse(res, {
       success: true,
       message: "Posts Retrived Successfully",
-      data: result,
+      data: result.data,
+      meta: result.meta,
       statusCode: httpStatus.OK,
     });
   },

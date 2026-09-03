@@ -21,7 +21,6 @@ const registerUser = catchAsync(
 const getMyProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken } = req.cookies;
-    console.log("user", req.user);
 
     const profile = await userServices.getMyProfileFromDB(
       req.user?.id as string,

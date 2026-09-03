@@ -12,6 +12,9 @@ const loginUser = async (payload: ILoginUser) => {
   const user = await prisma.user.findUniqueOrThrow({
     where: { email },
   });
+  if (!user) {
+    throw new Error("User not found");
+  }
 
   if (user.activeStatus === "BLOCKED") {
     throw new Error("Your account has been Blocked. Please contact support");
