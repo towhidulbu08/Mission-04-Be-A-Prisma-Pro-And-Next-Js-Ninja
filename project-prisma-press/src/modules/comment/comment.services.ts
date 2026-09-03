@@ -5,26 +5,10 @@ import {
   IUpdateCommentPayload,
 } from "./comment.interface";
 
-const getCommentByCommentIdFromDB = async (commentId: string) => {
-  const comment = await prisma.comment.findUniqueOrThrow({
+const getCommentByPostIdFromDB = async (postId: string) => {
+  const comment = await prisma.comment.findMany({
     where: {
-      id: commentId,
-    },
-    include: {
-      author: {
-        omit: {
-          password: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      },
-      post: {
-        select: {
-          id: true,
-          title: true,
-          views: true,
-        },
-      },
+      postId,
     },
   });
   return comment;
@@ -142,7 +126,7 @@ const deleteCommentFromDB = async (commentId: string, authorId: string) => {
   return comment;
 };
 export const commentService = {
-  getCommentByCommentIdFromDB,
+  getCommentByPostIdFromDB,
 
   getCommentsByAuthorIdFromDB,
   createCommentIntoDB,
